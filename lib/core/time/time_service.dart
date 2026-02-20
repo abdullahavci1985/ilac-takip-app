@@ -5,7 +5,8 @@ import 'package:timezone/timezone.dart' as tz;
 class TimeService {
   static Future<void> init() async {
     tz.initializeTimeZones();
-    final name = await FlutterNativeTimezone.getLocalTimezone();
+    final tzInfo = await FlutterTimezone.getLocalTimezone();
+final name = tzInfo.identifier;
     tz.setLocalLocation(tz.getLocation(name));
   }
 
