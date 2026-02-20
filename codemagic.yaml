@@ -1,0 +1,28 @@
+workflows:
+  android-release:
+    name: Android Release APK
+    max_build_duration: 60
+    environment:
+      flutter: stable
+      java: 17
+    scripts:
+      - name: Create Flutter project skeleton
+        script: |
+          rm -rf __tmp_app
+          flutter create __tmp_app
+          cp -r __tmp_app/android .
+          cp -r __tmp_app/ios .
+          cp -r __tmp_app/web .
+          cp -r __tmp_app/linux .
+          cp -r __tmp_app/macos .
+          cp -r __tmp_app/windows .
+          cp __tmp_app/analysis_options.yaml .
+          cp __tmp_app/pubspec.lock . || true
+      - name: Flutter pub get
+        script: flutter pub get
+      - name: Drift codegen
+        script: flutter pub run build_runner build --delete-conflicting-outputs
+      - name: Build release APK
+        script: flutter build apk --release
+    artifacts:
+      - build/app/outputs/flutter-apk/app-release.apk
